@@ -1,0 +1,24 @@
+{
+  "name": "node-red-buffer-xlsx",
+  "version": "1.0.0",
+  "description": "A simple node to convert a JSON to an excel buffer",
+  "main": "buffer-xlsx.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Juraj van Rietbergen",
+  "keywords": [
+    "node-red",
+    "JSON to buffered xlsx",
+    "xlsx"
+  ],
+  "license": "MIT",
+  "node-red": {
+    "nodes": {
+      "buffer-xlsx": "buffer-xlsx.js"
+    }
+  },
+  "dependencies": {
+    "better-xlsx": "^0.7.6"
+  }
+}

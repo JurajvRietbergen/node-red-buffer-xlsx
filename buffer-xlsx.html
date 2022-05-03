@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    RED.nodes.registerType('buffer-xlsx',{
+        category: 'parser',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            complex: {value:false}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "font-awesome/fa-file-excel-o",
+        label: function() {
+            return this.name||"buffer-xlsx";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="buffer-xlsx">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-complex" style="width: auto;">
+			Complex Mode: 
+		</label>
+		<input type="checkbox" id="node-input-complex" style="display: inline-block; width: auto; vertical-align: top;" />
+    </div>
+</script>
+
+<script type="text/html" data-help-name="lower-case">
+    <p>A simple node that converts JSON to Excel in buffer made using better-xlsx</p>
+    <h3>Details</h3>
+    <p><code>msg.payload</code> should contain a JSON to be converted, see <a>http://TBD.com</a></p>
+</script>
