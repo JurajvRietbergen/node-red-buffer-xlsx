@@ -45,15 +45,23 @@ module.exports = function (RED) {
                                     const add_cell = add_row.addCell();
                                     let cellStyling = null;
                                     Object.entries(cell).forEach(([keyL, valueL]) => {
-                                        if (keyL === 'cell_value') {
-                                            add_cell.value = valueL;
-                                        } else if (keyL === 'cell_format') {
-                                            add_cell.numFmt = valueL;
-                                        } else if (keyL === 'cell_formula') {
-                                            add_cell.setFormula = valueL;
-                                        }
-                                        else if (keyL === 'cell_styling') {
-                                            cellStyling = valueL;
+                                        // Cell JSON reading
+                                        switch (keyL) {
+                                            case 'cell_value':
+                                                add_cell.value = valueL;
+                                                break;
+                                            case 'cell_format':
+                                                add_cell.numFmt = valueL;
+                                                break;
+                                            case 'cell_formula':
+                                                add_cell.setFormula = valueL;
+                                                break;
+                                            case 'cell_styling':
+                                                cellStyling = valueL;
+                                                break;
+
+                                            default:
+                                                break;
                                         }
                                     })
 
@@ -75,48 +83,66 @@ module.exports = function (RED) {
                                     }
 
                                     Object.entries(stylePriority).forEach(([keySt, valueSt]) => {
+
                                         // Styling parameters
-                                        // Fill parameters
-                                        if (keySt === 'pattern_type') {
-                                            style.fill.patternType = valueSt;
-                                        } else if (keySt === 'fgColor') {
-                                            style.fill.fgColor = valueSt;
-                                        } else if (keySt === 'bgColor') {
-                                            style.fill.bgColor = valueSt;
-                                        }
+                                        switch (keySt) {
+                                            case 'pattern_type':
+                                                // Fill Parameters
+                                                style.fill.patternType = valueSt;
+                                                break;
+                                            case 'fgColor':
+                                                style.fill.fgColor = valueSt;
+                                                break;
+                                            case 'bgColor':
+                                                style.fill.bgColor = valueSt;
+                                                break;
+                                            case 'hAlign':
+                                                // Align Parameters
+                                                style.align.h = valueSt;
+                                                break;
+                                            case 'vAlign':
+                                                style.align.v = valueSt;
+                                                break;
+                                            case 'indent':
+                                                style.align.indent = valueSt;
+                                                break;
+                                            case 'shrinkToFit':
+                                                style.align.shrinkToFit = valueSt;
+                                                break;
+                                            case 'textRotation':
+                                                style.align.textRotation = valueSt;
+                                                break;
+                                            case 'wrapText':
+                                                style.align.wrapText = valueSt;
+                                                break;
+                                            case 'fSize':
+                                                // Font parameters
+                                                style.font.sz = valueSt;
+                                                break;
+                                            case 'fName':
+                                                style.font.name = valueSt;
+                                                break;
+                                            case 'fFamily':
+                                                style.font.family = valueSt;
+                                                break;
+                                            case 'fCharset':
+                                                style.font.charset = valueSt;
+                                                break;
+                                            case 'fColor':
+                                                style.font.color = valueSt;
+                                                break;
+                                            case 'fBold':
+                                                style.font.bold = valueSt;
+                                                break;
+                                            case 'fItalic':
+                                                style.font.italic = valueSt;
+                                                break;
+                                            case 'fUnderline':
+                                                style.font.underline = valueSt;
+                                                break;
 
-                                        // Align parameters
-                                        else if (keySt === 'hAlign') {
-                                            style.align.h = valueSt;
-                                        } else if (keySt === 'vAlign') {
-                                            style.align.v = valueSt;
-                                        } else if (keySt === 'indent') {
-                                            style.align.indent = valueSt;
-                                        } else if (keySt === 'shrinkToFit') {
-                                            style.align.shrinkToFit = valueSt;
-                                        } else if (keySt === 'textRotation') {
-                                            style.align.textRotation = valueSt;
-                                        } else if (keySt === 'wrapText') {
-                                            style.align.wrapText = valueSt;
-                                        }
-
-                                        // Font parameters
-                                        else if (keySt === 'fSize') {
-                                            style.font.sz = valueSt;
-                                        } else if (keySt === 'fName') {
-                                            style.font.name = valueSt;
-                                        } else if (keySt === 'fFamily') {
-                                            style.font.family = valueSt;
-                                        } else if (keySt === 'fCharset') {
-                                            style.font.charset = valueSt;
-                                        } else if (keySt === 'fColor') {
-                                            style.font.color = valueSt;
-                                        } else if (keySt === 'fBold') {
-                                            style.font.bold = valueSt;
-                                        } else if (keySt === 'fItalic') {
-                                            style.font.italic = valueSt;
-                                        } else if (keySt === 'fUnderline') {
-                                            style.font.underline = valueSt;
+                                            default:
+                                                break;
                                         }
 
                                         // Border parameters
