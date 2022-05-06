@@ -241,6 +241,15 @@ Each of the properties ending with styling can include the following optional pr
    **bColor**:
    Decides the colour of the borders, all colours should be in HEX RGBA format without the #.
 
+**Styling Priorities**:
+Styling is done in the following order:
+1. Cell Styling
+2. Header Styling
+3. Column Styling
+4. Row Styling
+5. Sheet Styling
+Unless Style Merging is selected the top priority will always be the only style chosen. If Style Merging is selected however the node will attempt to merge styles while still following the priority.
+
 **Full Styling Example**:
 ```
 {

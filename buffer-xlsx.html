@@ -4,7 +4,7 @@
         color: '#a6bbcf',
         defaults: {
             name: {value:""},
-            complex: {value:false}
+            stylemerge: {value:false}
         },
         inputs:1,
         outputs:1,
@@ -19,6 +19,12 @@
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-stylemerge" style="width: auto;">
+			Style Merging: 
+		</label>
+		<input type="checkbox" id="node-input-stylemerge" style="display: inline-block; width: auto; vertical-align: top;" />
     </div>
 </script>
 

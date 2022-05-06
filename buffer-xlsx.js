@@ -3,6 +3,7 @@ const xlsx = require('better-xlsx');
 module.exports = function (RED) {
     function BufferXlsx(config) {
         RED.nodes.createNode(this, config);
+        this.styleMerging = config.stylemerge;
         var node = this;
         node.on('input', function (msg) {
             SimpleToXlsx(node, msg);
@@ -12,7 +13,7 @@ module.exports = function (RED) {
     function SimpleToXlsx(node, msg) {
         const file = new xlsx.File();
         msg.payload.forEach(sheet => {
-            readSheet(sheet, file, node.complex);
+            readSheet(sheet, file, node.styleMerging);
         });
         let type = "base64"
         // Convert to buffer before continuing node.
@@ -26,7 +27,7 @@ module.exports = function (RED) {
             })
     }
 
-    function readSheet(sheet, file) {
+    function readSheet(sheet, file, styleMerging) {
         let sheetStyling = null;
         let headerStyling = null;
         let columnsStyling = null;
@@ -47,7 +48,7 @@ module.exports = function (RED) {
                     break;
                 case 'rows':
                     valueS.forEach((row, index_row) => {
-                        readRow(add_sheet, row, index_row, sheetStyling, headerStyling, columnsStyling)
+                        readRow(add_sheet, row, index_row, sheetStyling, headerStyling, columnsStyling, styleMerging)
                     });
                     break;
                 default:
@@ -57,7 +58,7 @@ module.exports = function (RED) {
     }
 
     // Row JSON Reading
-    function readRow(add_sheet, row, index_row, sheetStyling, headerStyling, columnsStyling) {
+    function readRow(add_sheet, row, index_row, sheetStyling, headerStyling, columnsStyling, styleMerging) {
         const add_row = add_sheet.addRow();
         let rowStyling = null;
 
@@ -68,7 +69,7 @@ module.exports = function (RED) {
                     break;
                 case 'cells':
                     valueC.forEach((cell, index_cell) => {
-                        readCell(add_row, cell, index_row, index_cell, sheetStyling, headerStyling, columnsStyling, rowStyling)
+                        readCell(add_row, cell, index_row, index_cell, sheetStyling, headerStyling, columnsStyling, rowStyling, styleMerging)
                     });
                     break;
                 default:
@@ -78,7 +79,7 @@ module.exports = function (RED) {
     }
 
     // Cell JSON Reading
-    function readCell(add_row, cell, index_row, index_cell, sheetStyling, headerStyling, columnsStyling, rowStyling) {
+    function readCell(add_row, cell, index_row, index_cell, sheetStyling, headerStyling, columnsStyling, rowStyling, styleMerging) {
         const add_cell = add_row.addCell();
         let cellStyling = null;
 
@@ -94,11 +95,11 @@ module.exports = function (RED) {
                     break;
             }
         })
-        styleCell(add_cell, index_row, index_cell, sheetStyling, headerStyling, columnsStyling, rowStyling, cellStyling);
+        styleCell(add_cell, index_row, index_cell, sheetStyling, headerStyling, columnsStyling, rowStyling, cellStyling, styleMerging);
     }
 
     // Cell Styling
-    function styleCell(add_cell, index_row, index_cell, sheetStyling, headerStyling, columnsStyling, rowStyling, cellStyling) {
+    function styleCell(add_cell, index_row, index_cell, sheetStyling, headerStyling, columnsStyling, rowStyling, cellStyling, styleMerging) {
 
         // Based on following priority styling is chosen:
         // 1. Cell
@@ -126,11 +127,32 @@ module.exports = function (RED) {
             stylePriority = sheetStyling;
         }
 
+        console.log(styleMerging);
+        if (styleMerging) {
+            let styles = [cellStyling, headerStyling, columnStyling, rowStyling, sheetStyling];
+            styles.forEach(style => {
+                if (style) {
+                    Object.entries(style).forEach(([keyT, valueT]) => {
+                        let found = false;
+                        Object.entries(stylePriority).forEach(([keyStyle, valueStyle]) => {
+                            if (keyStyle === keyT) {
+                                console.log("Found: " + keyStyle + " = " + keyT);
+                                found = true;
+                            }
+                        })
+                        if (!found) {
+                            stylePriority[keyT] = valueT;
+                        }
+                        console.log(stylePriority);
+                    })
+                }
+            });
+        }
+
         if (stylePriority) {
             Object.entries(stylePriority).forEach(([keySt, valueSt]) => {
 
                 // Styling parameters
-                console.log(keySt)
                 switch (keySt) {
                     case 'pattern_type':
                         // Fill Parameters
@@ -163,7 +185,7 @@ module.exports = function (RED) {
                         break;
                     case 'fSize':
                         // Font parameters
-                        style.font.sz = valueSt;
+                        style.font.size = valueSt;
                         break;
                     case 'fName':
                         style.font.name = valueSt;
