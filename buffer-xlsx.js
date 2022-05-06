@@ -3,32 +3,10 @@ const xlsx = require('better-xlsx');
 module.exports = function (RED) {
     function BufferXlsx(config) {
         RED.nodes.createNode(this, config);
-        this.complex = config.complex;
         var node = this;
         node.on('input', function (msg) {
-            if (node.complex) {
-                ComplexToXlsx(node, msg);
-            } else {
-                SimpleToXlsx(node, msg);
-            }
+            SimpleToXlsx(node, msg);
         });
-    }
-
-    function ComplexToXlsx(node, msg) {
-        const file = new xlsx.File();
-        msg.payload.forEach(sheet => {
-            readSheet(sheet, file, node.complex);
-        });
-        let type = "base64"
-        // Convert to buffer before continuing node.
-        file
-            .saveAs(type).then(b64 => {
-                msg.payload = Buffer.from(b64, 'base64');
-                node.send(msg);
-            }).catch(err => {
-                console.log(err);
-                node.send(msg);
-            })
     }
 
     function SimpleToXlsx(node, msg) {
