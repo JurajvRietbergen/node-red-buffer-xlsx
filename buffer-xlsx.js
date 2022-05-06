@@ -87,12 +87,6 @@ module.exports = function (RED) {
                 case 'cell_value':
                     add_cell.value = valueL;
                     break;
-                case 'cell_format':
-                    add_cell.numFmt = valueL;
-                    break;
-                case 'cell_formula':
-                    add_cell.setFormula = valueL;
-                    break;
                 case 'cell_styling':
                     cellStyling = valueL;
                     break;
@@ -113,10 +107,13 @@ module.exports = function (RED) {
         // 3. Row
         // 4. Sheet
         let stylePriority = null;
-        let columnStyling = columnsStyling.find(i => i.index === index_cell);
+        let columnStyling = null;
+        if (columnsStyling) {
+            columnStyling = columnsStyling.find(i => i.index === index_cell);
+        }
 
         const style = new xlsx.Style();
-        
+
         if (cellStyling) {
             stylePriority = cellStyling;
         } else if (index_row === 0) {
@@ -129,72 +126,80 @@ module.exports = function (RED) {
             stylePriority = sheetStyling;
         }
 
-        Object.entries(stylePriority).forEach(([keySt, valueSt]) => {
+        if (stylePriority) {
+            Object.entries(stylePriority).forEach(([keySt, valueSt]) => {
 
-            // Styling parameters
-            switch (keySt) {
-                case 'pattern_type':
-                    // Fill Parameters
-                    style.fill.patternType = valueSt;
-                    break;
-                case 'fgColor':
-                    style.fill.fgColor = valueSt;
-                    break;
-                case 'bgColor':
-                    style.fill.bgColor = valueSt;
-                    break;
-                case 'hAlign':
-                    // Align Parameters
-                    style.align.h = valueSt;
-                    break;
-                case 'vAlign':
-                    style.align.v = valueSt;
-                    break;
-                case 'indent':
-                    style.align.indent = valueSt;
-                    break;
-                case 'shrinkToFit':
-                    style.align.shrinkToFit = valueSt;
-                    break;
-                case 'textRotation':
-                    style.align.textRotation = valueSt;
-                    break;
-                case 'wrapText':
-                    style.align.wrapText = valueSt;
-                    break;
-                case 'fSize':
-                    // Font parameters
-                    style.font.sz = valueSt;
-                    break;
-                case 'fName':
-                    style.font.name = valueSt;
-                    break;
-                case 'fFamily':
-                    style.font.family = valueSt;
-                    break;
-                case 'fCharset':
-                    style.font.charset = valueSt;
-                    break;
-                case 'fColor':
-                    style.font.color = valueSt;
-                    break;
-                case 'fBold':
-                    style.font.bold = valueSt;
-                    break;
-                case 'fItalic':
-                    style.font.italic = valueSt;
-                    break;
-                case 'fUnderline':
-                    style.font.underline = valueSt;
-                    break;
+                // Styling parameters
+                console.log(keySt)
+                switch (keySt) {
+                    case 'pattern_type':
+                        // Fill Parameters
+                        style.fill.patternType = valueSt;
+                        break;
+                    case 'fgColor':
+                        style.fill.fgColor = valueSt;
+                        break;
+                    case 'bgColor':
+                        style.fill.bgColor = valueSt;
+                        break;
+                    case 'hAlign':
+                        // Align Parameters
+                        style.align.h = valueSt;
+                        break;
+                    case 'vAlign':
+                        style.align.v = valueSt;
+                        break;
+                    case 'indent':
+                        style.align.indent = valueSt;
+                        break;
+                    case 'shrinkToFit':
+                        style.align.shrinkToFit = valueSt;
+                        break;
+                    case 'textRotation':
+                        style.align.textRotation = valueSt;
+                        break;
+                    case 'wrapText':
+                        style.align.wrapText = valueSt;
+                        break;
+                    case 'fSize':
+                        // Font parameters
+                        style.font.sz = valueSt;
+                        break;
+                    case 'fName':
+                        style.font.name = valueSt;
+                        break;
+                    case 'fFamily':
+                        style.font.family = valueSt;
+                        break;
+                    case 'fCharset':
+                        style.font.charset = valueSt;
+                        break;
+                    case 'fColor':
+                        style.font.color = valueSt;
+                        break;
+                    case 'fBold':
+                        style.font.bold = valueSt;
+                        break;
+                    case 'fItalic':
+                        style.font.italic = valueSt;
+                        break;
+                    case 'fUnderline':
+                        style.font.underline = valueSt;
+                        break;
+                    case 'cell_format':
+                        add_cell.numFmt = valueSt;
+                        break;
+                    case 'cell_formula':
+                        add_cell.setFormula = valueSt;
+                        break;
+                    default:
+                        break;
+                }
 
-                default:
-                    break;
-            }
-
-            // Border parameters
-            // TODO: Add border styling
-        })
+                // Border parameters
+                // TODO: Add border styling
+            })
+        }
         add_cell.style = style;
     }
 
