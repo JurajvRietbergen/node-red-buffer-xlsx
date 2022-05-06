@@ -367,9 +367,8 @@ Here some examples of full JSON
 - To be made
 
 # TODO:
-[ ] Testing
-
-[ ] Complex JSON
-
-[ ] Ability for more complex features
+- [ ] Testing
+- [ ] Complex JSON
+- [ ] Ability for more complex features
+- [ ] Border Support
 
