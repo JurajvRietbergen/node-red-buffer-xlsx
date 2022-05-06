@@ -15,18 +15,29 @@ module.exports = function (RED) {
     }
 
     function ComplexToXlsx(node, msg) {
-        msg.payload = "TBD";
-        node.send(msg);
+        const file = new xlsx.File();
+        msg.payload.forEach(sheet => {
+            readSheet(sheet, file, node.complex);
+        });
+        let type = "base64"
+        // Convert to buffer before continuing node.
+        file
+            .saveAs(type).then(b64 => {
+                msg.payload = Buffer.from(b64, 'base64');
+                node.send(msg);
+            }).catch(err => {
+                console.log(err);
+                node.send(msg);
+            })
     }
 
     function SimpleToXlsx(node, msg) {
         const file = new xlsx.File();
-        console.log(node.complex);
         msg.payload.forEach(sheet => {
-            readSheet(sheet, file);
+            readSheet(sheet, file, node.complex);
         });
         let type = "base64"
-        // Convert to buffer before continueing node.
+        // Convert to buffer before continuing node.
         file
             .saveAs(type).then(b64 => {
                 msg.payload = Buffer.from(b64, 'base64');
@@ -40,6 +51,7 @@ module.exports = function (RED) {
     function readSheet(sheet, file) {
         let sheetStyling = null;
         let headerStyling = null;
+        let columnsStyling = null;
         let add_sheet;
         Object.entries(sheet).forEach(([keyS, valueS]) => {
             switch (keyS) {
@@ -52,9 +64,12 @@ module.exports = function (RED) {
                 case 'header_styling':
                     headerStyling = valueS;
                     break;
+                case 'columns_styling':
+                    columnsStyling = valueS;
+                    break;
                 case 'rows':
-                    valueS.forEach((row, index) => {
-                        readRow(add_sheet, row, index, sheetStyling, headerStyling)
+                    valueS.forEach((row, index_row) => {
+                        readRow(add_sheet, row, index_row, sheetStyling, headerStyling, columnsStyling)
                     });
                     break;
                 default:
@@ -64,7 +79,7 @@ module.exports = function (RED) {
     }
 
     // Row JSON Reading
-    function readRow(add_sheet, row, index, sheetStyling, headerStyling) {
+    function readRow(add_sheet, row, index_row, sheetStyling, headerStyling, columnsStyling) {
         const add_row = add_sheet.addRow();
         let rowStyling = null;
 
@@ -74,8 +89,8 @@ module.exports = function (RED) {
                     rowStyling = valueC;
                     break;
                 case 'cells':
-                    valueC.forEach((cell) => {
-                        readCell(add_row, cell, index, sheetStyling, headerStyling, rowStyling)
+                    valueC.forEach((cell, index_cell) => {
+                        readCell(add_row, cell, index_row, index_cell, sheetStyling, headerStyling, columnsStyling, rowStyling)
                     });
                     break;
                 default:
@@ -85,7 +100,7 @@ module.exports = function (RED) {
     }
 
     // Cell JSON Reading
-    function readCell(add_row, cell, index, sheetStyling, headerStyling, rowStyling) {
+    function readCell(add_row, cell, index_row, index_cell, sheetStyling, headerStyling, columnsStyling, rowStyling) {
         const add_cell = add_row.addCell();
         let cellStyling = null;
 
@@ -107,23 +122,29 @@ module.exports = function (RED) {
                     break;
             }
         })
-        styleCell(add_cell, index, sheetStyling, headerStyling, rowStyling, cellStyling);
+        styleCell(add_cell, index_row, index_cell, sheetStyling, headerStyling, columnsStyling, rowStyling, cellStyling);
     }
 
     // Cell Styling
-    function styleCell(add_cell, index, sheetStyling, headerStyling, rowStyling, cellStyling) {
+    function styleCell(add_cell, index_row, index_cell, sheetStyling, headerStyling, columnsStyling, rowStyling, cellStyling) {
 
         // Based on following priority styling is chosen:
-        // 1. Header
-        // 2. Cell
+        // 1. Cell
+        // 2. Header
+        // 3. Column
         // 3. Row
         // 4. Sheet
         let stylePriority = null;
+        let columnStyling = columnsStyling.find(i => i.index === index_cell);
+
         const style = new xlsx.Style();
-        if (index === 0) {
-            stylePriority = headerStyling;
-        } else if (cellStyling) {
+        
+        if (cellStyling) {
             stylePriority = cellStyling;
+        } else if (index_row === 0) {
+            stylePriority = headerStyling;
+        } else if (columnStyling) {
+            stylePriority = columnStyling.column_styling;
         } else if (rowStyling) {
             stylePriority = rowStyling;
         } else if (sheetStyling) {
