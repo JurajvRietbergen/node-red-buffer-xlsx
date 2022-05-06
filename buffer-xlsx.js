@@ -30,7 +30,7 @@ module.exports = function (RED) {
         file
             .saveAs(type).then(b64 => {
                 msg.payload = Buffer.from(b64, 'base64');
-                msg.send(msg);
+                node.send(msg);
             }).catch(err => {
                 console.log(err);
                 node.send(msg);
