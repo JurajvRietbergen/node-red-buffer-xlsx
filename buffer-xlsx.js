@@ -192,6 +192,30 @@ module.exports = function (RED) {
                     case 'cell_formula':
                         add_cell.setFormula = valueSt;
                         break;
+                    case 'borders':
+                        Object.entries(valueSt).forEach(([keyBr, valueBr]) => {
+                            switch (keyBr) {
+                                case 'top':
+                                    style.border.top = valueBr.style;
+                                    style.border.topColor = valueBr.bColor;
+                                    break;
+                                case 'right':
+                                    style.border.right = valueBr.style;
+                                    style.border.rightColor = valueBr.bColor;
+                                    break;
+                                case 'bottom':
+                                    style.border.bottom = valueBr.style;
+                                    style.border.bottomColor = valueBr.bColor;
+                                    break;
+                                case 'left':
+                                    style.border.left = valueBr.style;
+                                    style.border.leftColor = valueBr.bColor;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        })
+                        break;
                     default:
                         break;
                 }
