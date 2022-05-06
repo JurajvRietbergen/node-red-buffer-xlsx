@@ -140,10 +140,10 @@ Each of the properties ending with styling can include the following optional pr
   - none
 
   **fgColor**:
-  Decides the foreground colour of the cell, all colours should be in HEX RBGA format.
+  Decides the foreground colour of the cell, all colours should be in HEX RBGA format without the #.
 
   **bgColor**:
-  Deicdes the background colour of the cell, all colours should be in HEX RGBA format.
+  Deicdes the background colour of the cell, all colours should be in HEX RGBA format without the #.
 
   **hAlign**:
   Horizontal Alignment of cell values with the following options:
@@ -184,7 +184,7 @@ Each of the properties ending with styling can include the following optional pr
   Decides the cell value's charset, should be a charset.
 
   **fColor**:
-  Decides the cell value's colour, all colours should be in HEX RGBA format.
+  Decides the cell value's colour, all colours should be in HEX RGBA format without the #.
 
   **fBold**:
   Decides whether the cell's value is Bold or not, should be a boolean.
@@ -207,30 +207,81 @@ Each of the properties ending with styling can include the following optional pr
 
   **cell_formula**:
   Decides the cell's formula, see excel formulas for more.
+  
+  **Borders**:
+  Decides the cell's borders formatting using the following parameters:
+  - all
+  - top
+  - right
+  - bottom
+  - left
+
+  Each of them can have the following:
+  
+  - style 
+  - bColor
+
+   **style**:
+   Style can consist of the following types of border styles:
+   ```
+   thin
+   medium
+   thick
+   dotted
+   hair
+   dashed
+   mediumDashed
+   dashDot
+   mediumDashDot
+   dashDotDot
+   mediumDashDotDot
+   slantDashDot
+   ```
+   
+   **bColor**:
+   Decides the colour of the borders, all colours should be in HEX RGBA format without the #.
 
 **Full Styling Example**:
 ```
-  "sheet_styling": {
-      "pattern_type": "solid",
-      "fgColor": "ffa2917d",
-      "bgColor": "43ff64d9",
-      "hAlign": "center",
-      "vAlign": "top",
-      "indent": "3",
-      "shrinkToFit": false,
-      "textRotation": "155",
-      "wrapText": true,
-      "fSize": "11",
-      "fName": "Calibri",
-      "fFamily": "Calibri",
-      "fCharset": "UTF-8",
-      "fColor": "9b0f64d9",
-      "fBold": true,
-      "fItalic": false,
-      "fUnderline": false,
-      "cell_format": "m/dd/yy",
-      "cell_formula": "A1 - C2"      
+{
+  "pattern_type": "solid",
+  "fgColor": "ffa2917d",
+  "bgColor": "43ff64d9",
+  "hAlign": "center",
+  "vAlign": "top",
+  "indent": "3",
+  "shrinkToFit": false,
+  "textRotation": "155",
+  "wrapText": true,
+  "fSize": "11",
+  "fName": "Calibri",
+  "fFamily": "Calibri",
+  "fCharset": "UTF-8",
+  "fColor": "9b0f64d9",
+  "fBold": true,
+  "fItalic": false,
+  "fUnderline": false,
+  "cell_format": "m/dd/yy",
+  "cell_formula": "A1 - C2",
+  "borders": {
+    "top": {
+      "style": "medium",
+      "bColor": "009b9bd9"
     },
+    "right": {
+      "style": "thin",
+      "bColor": "9b0f64d9"
+    },
+    "bottom": {
+      "style": "thick",
+      "bColor": "9b0f64d9"
+    },
+    "left": {
+      "style": "dashDotDot",
+      "bColor": "009b9bd9"
+    }
+  }
+}
 ```
 
 ## Full Examples
@@ -246,7 +297,13 @@ Here some examples of full JSON
       "fgColor": "ffffffff",
       "bgColor": "FE0000",
       "hAlign": "left",
-      "vAlign": "left"
+      "vAlign": "left",
+      "borders": {
+       "all": {
+        "style": "thick",
+        "bColor": "009b9bd9"
+       }
+      }
     },
     "header_styling": {
       "pattern_type": "solid",
@@ -370,5 +427,5 @@ Here some examples of full JSON
 - [ ] Testing
 - [ ] Complex JSON
 - [ ] Ability for more complex features
-- [ ] Border Support
+- [X] Border Support
 
