@@ -1,5 +1,5 @@
 # node-red-buffer-xlsx
-A simple node-red node for converting JSON to a buffered xlsx.
+A simple node-red node for converting JSON to a buffered xlsx. This package uses the node package better-xlsx.
 
 ## Usage
 To ensure the node works correctly the JSON has to be formatted in a certain way. All styling options are optional.

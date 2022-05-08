@@ -3,8 +3,16 @@
   "version": "1.0.0",
   "description": "A simple node to convert a JSON to an excel buffer",
   "main": "buffer-xlsx.js",
+  "bugs": {
+    "email": "jurajriet@gmail.com",
+    "url": "https://github.com/JurajvRietbergen/node-red-buffer-xlsx/issues"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JurajvRietbergen/node-red-buffer-xlsx.git"
   },
   "author": "Juraj van Rietbergen",
   "keywords": [
@@ -20,5 +28,8 @@
   },
   "dependencies": {
     "better-xlsx": "^0.7.6"
+  },
+  "devDependencies": {
+    "node-red": "^2.2.2"
   }
 }
