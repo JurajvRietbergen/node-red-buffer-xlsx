@@ -1,6 +1,6 @@
 {
   "name": "node-red-buffer-xlsx",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple node to convert a JSON to an excel buffer",
   "main": "buffer-xlsx.js",
   "bugs": {
