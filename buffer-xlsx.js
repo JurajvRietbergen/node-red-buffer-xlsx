@@ -1,4 +1,4 @@
-const xlsx = require('better-xlsx');
+const xlsx = require('sheetjs-style');
 
 module.exports = function (RED) {
     function BufferXlsx(config) {

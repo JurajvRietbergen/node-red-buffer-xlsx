@@ -27,7 +27,8 @@
     }
   },
   "dependencies": {
-    "better-xlsx": "^0.7.6"
+    "better-xlsx": "^0.7.6",
+    "sheetjs-style": "^0.15.8"
   },
   "devDependencies": {
     "node-red": "^2.2.2"
