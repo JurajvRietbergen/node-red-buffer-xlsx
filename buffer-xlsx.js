@@ -4,13 +4,27 @@ module.exports = function (RED) {
     function BufferXlsx(config) {
         RED.nodes.createNode(this, config);
         this.styleMerging = config.stylemerge;
+        this.complex = config.complex;
         var node = this;
         node.on('input', function (msg) {
-            SimpleToXlsx(node, msg);
+            if (node.complex) {
+                ComplexToXslx(node, msg)
+            } else {
+                SimpleToXlsx(node, msg);
+            }
         });
     }
 
     function SimpleToXlsx(node, msg) {
+        const workbook = xlsx.utils.book_new()
+        const filename = 'mySheet'
+        const dataSheet = xlsx.utils.json_to_sheet(msg.payload)
+        xlsx.utils.book_append_sheet(workbook, dataSheet, filename.replace('/', ''))
+        msg.payload = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' }) 
+        node.send(msg)
+    }
+
+    function ComplexToXslx(node, msg) {
         const file = new xlsx.File();
         msg.payload.forEach(sheet => {
             readSheet(sheet, file, node.styleMerging);

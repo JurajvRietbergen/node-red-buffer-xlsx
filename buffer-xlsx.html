@@ -1,16 +1,17 @@
 <script type="text/javascript">
-    RED.nodes.registerType('buffer-xlsx',{
+    RED.nodes.registerType('buffer-xlsx', {
         category: 'parser',
         color: '#a6bbcf',
         defaults: {
-            name: {value:""},
-            stylemerge: {value:false}
+            name: { value: "" },
+            complex: { value: false },
+            stylemerge: { value: false }
         },
-        inputs:1,
-        outputs:1,
+        inputs: 1,
+        outputs: 1,
         icon: "font-awesome/fa-file-excel-o",
-        label: function() {
-            return this.name||"buffer-xlsx";
+        label: function () {
+            return this.name || "buffer-xlsx";
         }
     });
 </script>
@@ -21,6 +22,10 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
+        <label for="node-input-complex" style="width: auto;">
+            Complex Mode: 
+        </label>
+        <input type="checkbox" id="node-input-complex" style="display: inline-block; width: auto; vertical-align: top;" />
         <label for="node-input-stylemerge" style="width: auto;">
 			Style Merging: 
 		</label>
