@@ -25,23 +25,24 @@ module.exports = function (RED) {
     }
 
     function ComplexToXslx(node, msg) {
+        const workbook = xlsx.utils.book_new()
         const file = new xlsx.File();
         msg.payload.forEach(sheet => {
-            readSheet(sheet, file, node.styleMerging);
+            readSheet(sheet, workbook, node.styleMerging);
         });
-        let type = "base64"
-        // Convert to buffer before continuing node.
-        file
-            .saveAs(type).then(b64 => {
-                msg.payload = Buffer.from(b64, 'base64');
-                node.send(msg);
-            }).catch(err => {
-                console.log(err);
-                node.send(msg);
-            })
+        // let type = "base64"
+        // // Convert to buffer before continuing node.
+        // file
+        //     .saveAs(type).then(b64 => {
+        //         msg.payload = Buffer.from(b64, 'base64');
+        //         node.send(msg);
+        //     }).catch(err => {
+        //         console.log(err);
+        //         node.send(msg);
+        //     })
     }
 
-    function readSheet(sheet, file, styleMerging) {
+    function readSheet(sheet, workbook, styleMerging) {
         let sheetStyling = null;
         let headerStyling = null;
         let columnsStyling = null;
@@ -49,7 +50,7 @@ module.exports = function (RED) {
         Object.entries(sheet).forEach(([keyS, valueS]) => {
             switch (keyS) {
                 case 'sheet_name':
-                    add_sheet = file.addSheet(valueS);
+                    workbook.SheetNames.push(valueS);
                     break;
                 case 'sheet_styling':
                     sheetStyling = valueS;
